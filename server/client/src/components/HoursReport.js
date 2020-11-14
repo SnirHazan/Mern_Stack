@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { URLS } from '../consts';
 import axios from 'axios';
 
 const Item = props => {
@@ -48,7 +49,7 @@ export default class HoursReport extends Component {
 
     async componentDidMount(date = this.state.date) {
         try {
-            const res = await axios.get(`http://localhost:4000/report/${date}`);
+            const res = await axios.get(URLS.ReportUrl(date));
             this.setState({ items: res.data });
         } catch (err) {
             console.log(`cannot get items`);

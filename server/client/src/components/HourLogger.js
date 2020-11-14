@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { URLS } from '../consts';
 import axios from 'axios';
 
 export default class HourLogger extends Component {
@@ -13,7 +14,7 @@ export default class HourLogger extends Component {
 
     //get employee list
     async componentDidMount() {
-        const res = await axios.get('http://localhost:4000/');
+        const res = await axios.get(URLS.BaseUrl);
         this.setState({ employeeList: res.data });
     }
 
@@ -41,10 +42,7 @@ export default class HourLogger extends Component {
         // console.log(newEvent);
 
         try {
-            const res = await axios.post(
-                'http://localhost:4000/events/add',
-                newEvent
-            );
+            const res = await axios.post(URLS.CreateEvent, newEvent);
             console.log(res.data);
         } catch (err) {
             console.log(`error - cannot post new todo: ${err}`);

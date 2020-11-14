@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { URLS } from '../consts';
 import axios from 'axios';
 
 export default class DeleteEmployee extends Component {
@@ -13,7 +14,7 @@ export default class DeleteEmployee extends Component {
     }
 
     async componentDidMount() {
-        const res = await axios.get('http://localhost:4000/');
+        const res = await axios.get(URLS.BaseUrl);
         this.setState({ employeeList: res.data });
     }
 
@@ -39,9 +40,7 @@ export default class DeleteEmployee extends Component {
         e.preventDefault();
         if (this.state.selectedEmployeeId !== this.CHOOSE_OPTION) {
             try {
-                const res = await axios.get(
-                    `http://localhost:4000/employee/delete/${this.state.selectedEmployeeId}`
-                );
+                const res = await axios.get(URLS.DeleteEmployeeUrl(this.state.selectedEmployeeId));
                 console.log(res.data);
             } catch (err) {
                 console.log(`error - cannot post new todo: ${err}`);

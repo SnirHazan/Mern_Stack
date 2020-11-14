@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { URLS } from '../consts';
 import axios from 'axios';
 
 export default class CreateEmployee extends Component {
@@ -18,7 +19,7 @@ export default class CreateEmployee extends Component {
     handleSubmit = async e => {
         e.preventDefault();
         try {
-            const res = await axios.post('http://localhost:4000/employee/add', {
+            const res = await axios.post(URLS.CreateEmployeeUrl, {
                 employeeName: this.state.employeeName,
             });
             console.log(res.data);
