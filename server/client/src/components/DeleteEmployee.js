@@ -48,13 +48,16 @@ export default class DeleteEmployee extends Component {
 
             this.setState({
                 selectedEmployeeId: '',
-                selectedEvent: '',
+                selectedEvent: '', // TODO: SelectedEvent for what?
             });
 
             return;
         }
         this.setState({ errorNotChosen: true });
     };
+
+    // Change name to whatever u want..
+    hadnleBtnClick = () => this.setState({ errorNotChosen: false });
 
     render() {
         return (
@@ -94,9 +97,7 @@ export default class DeleteEmployee extends Component {
                             className='close'
                             data-dismiss='alert'
                             aria-label='Close'
-                            onClick={() =>
-                                this.setState({ errorNotChosen: false })
-                            }
+                            onClick={this.hadnleBtnClick}
                         >
                             <span aria-hidden='true'>&times;</span>
                         </button>
