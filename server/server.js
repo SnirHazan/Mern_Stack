@@ -1,5 +1,6 @@
 const express = require('express');
 const config = require('config');
+const { uniqBy, map, reduce, forEach } = require('lodash');
 const cors = require('cors');
 const moment = require('moment');
 const mongoose = require('mongoose');
@@ -59,12 +60,12 @@ app.post('/employee/add', async (req, res) => {
 });
 
 app.post('/events/add', async (req, res) => {
-    const { selectedEmployeeId, eventType } = req.body;
+    const { selectedEmployeeId: _employee, eventType } = req.body;
 
     try {
         const event = await new eventSchema({
-            _employee: selectedEmployeeId,
-            eventType: eventType,
+            _employee,
+            eventType,
         }).save();
         res.status(200).send(
             `saved event type: ${eventType} for employee ${event._employee}`
@@ -87,24 +88,30 @@ app.get('/report/:date', async (req, res) => {
     });
 
     //extract uniqe employees (converted to string because _id is ObjectId type)
-    const uniqueEmployees = [
-        ...new Set(events.map(item => item._employee.toString())),
-    ];
+    const uniqueEmployees = map(uniqBy(events, '_employee'), item => item._employee.toString());
+    // const uniqueEmployees = [
+    //     ...new Set(events.map(item => item._employee.toString())),
+    // ];
 
     // get employee data for those who had events on requested date
-    let employees = await employeeSchema.find({
+    const employees = await employeeSchema.find({
         _id: { $in: uniqueEmployees },
     });
 
-    const report = {};
+    // const report = {};
 
     //insert employees id to the obj + their names
-    employees.map(({ _id, employeeName }) => {
-        report[_id] = { empName: employeeName };
-    });
+    const report = reduce(employees, (reportsObj, employee) => ({
+        ...reportsObj,
+        [employee._id]: { empName: employee.employeeName }
+    }), {});
+
+    // employees.map(({ _id, employeeName }) => {
+    //     report[_id] = { empName: employeeName };
+    // });
 
     //add events to each employee id
-    events.map(event => {
+    forEach(events, event => {
         report[event._employee][event.eventType] = event.eventDateTime;
     });
     res.status(200).send(report);
