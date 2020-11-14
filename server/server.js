@@ -1,15 +1,23 @@
 const express = require('express');
+const config = require('config');
 const cors = require('cors');
 const moment = require('moment');
-const app = express();
-const PORT = 4000;
 const mongoose = require('mongoose');
-const eventSchema = require('./models/events');
-const employeeSchema = require('./models/employees');
-const MONGO_URL = 'mongodb://127.0.0.1:27017/employeeSchema';
+
+// Init app
+const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// DB Schemas
+const eventSchema = require('./models/events');
+const employeeSchema = require('./models/employees');
+
+// Config
+const PORT = config.get('PORT');
+const MONGO_URL = config.get('MONGO_URL');
+
 
 (async () => {
     try {
